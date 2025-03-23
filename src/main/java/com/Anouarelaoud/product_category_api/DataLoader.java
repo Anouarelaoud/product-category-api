@@ -25,18 +25,16 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Generate some random categories
         List<Category> categories = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             categories.add(new Category(
                     null,
                     faker.commerce().department(),
-                    null, // Parent category can be null for top-level categories
+                    null,
                     new ArrayList<>()));
         }
         categoryRepository.saveAll(categories);
 
-        // Generate some random products
         List<Product> products = new ArrayList<>();
         for (Category category : categories) {
             for (int i = 0; i < 3; i++) {
