@@ -1,5 +1,6 @@
 package com.Anouarelaoud.product_category_api.service;
 
+import com.Anouarelaoud.product_category_api.exception.ResourceNotFoundException;
 import com.Anouarelaoud.product_category_api.model.Category;
 import com.Anouarelaoud.product_category_api.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -31,12 +32,12 @@ public class CategoryService {
             category.setName(updatedCategory.getName());
             category.setParentCategory(updatedCategory.getParentCategory());
             return categoryRepository.save(category);
-        }).orElseThrow(() -> new RuntimeException("Category not found"));
+        }).orElseThrow(() -> new ResourceNotFoundException("Category with id " + id + " not found"));
     }
 
     public void deleteCategory(Long id) {
         if (!categoryRepository.existsById(id)) {
-            throw new RuntimeException("Category not found");
+            throw new ResourceNotFoundException("Category with id " + id + " not found");
         }
         categoryRepository.deleteById(id);
     }

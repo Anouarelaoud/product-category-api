@@ -1,5 +1,6 @@
 package com.Anouarelaoud.product_category_api.service;
 
+import com.Anouarelaoud.product_category_api.exception.ResourceNotFoundException;
 import com.Anouarelaoud.product_category_api.model.Product;
 import com.Anouarelaoud.product_category_api.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -34,12 +35,12 @@ public class ProductService {
             product.setCurrency(updatedProduct.getCurrency());
             product.setCategory(updatedProduct.getCategory());
             return productRepository.save(product);
-        }).orElseThrow(() -> new RuntimeException("Product not found"));
+        }).orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found"));
     }
 
     public void deleteProduct(Long id) {
         if (!productRepository.existsById(id)) {
-            throw new RuntimeException("Product not found");
+            throw new ResourceNotFoundException("Product with id " + id + " not found");
         }
         productRepository.deleteById(id);
     }
