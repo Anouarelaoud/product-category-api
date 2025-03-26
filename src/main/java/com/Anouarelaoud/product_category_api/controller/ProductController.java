@@ -20,10 +20,12 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @Operation(summary = "Get all products", description = "Fetch all products available in the system.")
-    @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    @Operation(summary = "Get products by category ID", description = "Fetch products by category ID.")
+    @ApiResponse(responseCode = "200", description = "Products found")
+    @ApiResponse(responseCode = "404", description = "No products for the given category not found")
+    @GetMapping("/category/{categoryId}")
+    public List<Product> getProductsByCategoryId(@PathVariable Long categoryId) {
+        return productService.getProductsByCategoryId(categoryId);
     }
 
     @Operation(summary = "Get product by ID", description = "Fetch a specific product by its ID.")
