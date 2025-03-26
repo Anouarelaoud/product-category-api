@@ -26,16 +26,36 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         List<Category> categories = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            categories.add(new Category(
+
+        for (int i = 0; i < 10; i++) {
+            List<Category> subCategories = new ArrayList<>();
+
+            for (int j = 0; j < 3; j++) {
+                Category subCategory = new Category(
+                        null,
+                        faker.commerce().department() + " Subcategory " + (i * 3 + j + 1),
+                        null,
+                        new ArrayList<>());
+                subCategories.add(subCategory);
+            }
+
+            Category mainCategory = new Category(
                     null,
-                    faker.commerce().department(),
+                    faker.commerce().department() + " Category " + (i + 1),
                     null,
-                    new ArrayList<>()));
+                    subCategories);
+
+            for (Category subCategory : subCategories) {
+                subCategory.setParentCategory(mainCategory);
+            }
+
+            categories.add(mainCategory);
         }
+
         categoryRepository.saveAll(categories);
 
         List<Product> products = new ArrayList<>();
+
         for (Category category : categories) {
             for (int i = 0; i < 3; i++) {
                 products.add(new Product(
@@ -46,10 +66,22 @@ public class DataLoader implements CommandLineRunner {
                         "USD",
                         category));
             }
+
+            for (Category subCategory : category.getSubcategories()) {
+                for (int i = 0; i < 2; i++) {
+                    products.add(new Product(
+                            null,
+                            faker.commerce().productName(),
+                            faker.commerce().material(),
+                            Double.parseDouble(faker.commerce().price()),
+                            "USD",
+                            subCategory));
+                }
+            }
         }
 
         productRepository.saveAll(products);
 
-        System.out.println("Random demo data created successfully!");
+        System.out.println("Random demo data with categories, subcategories, and products created successfully!");
     }
 }

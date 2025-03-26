@@ -30,4 +30,14 @@ public class Category {
     @JsonManagedReference
     @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
     private List<Category> subcategories = new ArrayList<>();
+
+    public void addSubcategory(Category subcategory) {
+        subcategories.add(subcategory);
+        subcategory.setParentCategory(this);
+    }
+
+    public void removeSubcategory(Category subcategory) {
+        subcategories.remove(subcategory);
+        subcategory.setParentCategory(null);
+    }
 }
