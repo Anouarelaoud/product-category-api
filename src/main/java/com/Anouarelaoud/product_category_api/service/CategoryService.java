@@ -2,7 +2,10 @@ package com.Anouarelaoud.product_category_api.service;
 
 import com.Anouarelaoud.product_category_api.exception.ResourceNotFoundException;
 import com.Anouarelaoud.product_category_api.model.Category;
+import com.Anouarelaoud.product_category_api.model.Product;
 import com.Anouarelaoud.product_category_api.repository.CategoryRepository;
+import com.Anouarelaoud.product_category_api.repository.ProductRepository;
+
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -10,9 +13,11 @@ import java.util.Optional;
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository) {
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
     }
 
     public List<Category> getAllCategories() {
@@ -36,9 +41,8 @@ public class CategoryService {
     }
 
     public void deleteCategory(Long id) {
-        if (!categoryRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Category with id " + id + " not found");
-        }
+        List<Product> products = productRepository.findByCategoryId(id);
+        productRepository.deleteAll(products);
         categoryRepository.deleteById(id);
     }
 }

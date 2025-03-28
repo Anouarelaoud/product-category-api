@@ -1,5 +1,8 @@
 package com.Anouarelaoud.product_category_api.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +30,7 @@ public class Product {
     private String currency;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CATEGORY_ID"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 }
